@@ -1,9 +1,30 @@
 # Transfrom Velocity
 
 ## Summary
-transfrom_velocity is a C++ program for performing 3D and 2D velocity transformations using Lie algebra..
+transfrom_velocity is a C++ program for performing 3D and 2D velocity transformations using Lie algebra.
 
-## How to build 
+$$
+\begin{aligned} 
+\xi_b =
+\left[\begin{matrix} 
+  v_b \\\\
+  \omega_b
+\end{matrix}\right]
+&= 
+\left[\begin{matrix} 
+  R_{ba} & [t_{ba}]_\times R_{ba} \\\\
+  \mathbf{0} & R_{ba}  \\
+\end{matrix}\right] 
+\left[\begin{matrix} 
+  v_a \\\\
+  \omega_a 
+\end{matrix}\right]
+\end{aligned}
+\tag{8}
+$$
+
+
+## How to build
 
 ~~~
 mkdir build
