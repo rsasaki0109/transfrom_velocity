@@ -1,7 +1,7 @@
 # Transfrom Velocity
 
 ## Summary
-transfrom_velocity is a C++ program for performing 3D and 2D velocity transformations.
+transfrom_velocity is a C++ program for performing 3D and 2D velocity transformations using Lie algebra..
 
 ## How to build 
 
