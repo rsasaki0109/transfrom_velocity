@@ -10,3 +10,8 @@ include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
 add_executable(transfrom_velocity_main ${SOURCES})
+
+add_executable(MathToolsTest
+    tests/test_math_tools.cpp
+    src/math_tools.cpp
+)
