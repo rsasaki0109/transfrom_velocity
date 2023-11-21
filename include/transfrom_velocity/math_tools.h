@@ -5,7 +5,7 @@
 #include <vector>
 #include <Eigen/Dense>
 
-namespace transfrom_velocity {
+namespace math_tools {
 
 Eigen::Matrix3d v2m(const Eigen::Vector3d& v);
 
