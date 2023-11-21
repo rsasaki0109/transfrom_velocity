@@ -1,6 +1,8 @@
 #include "transfrom_velocity/transfrom_velocity.h"
 #include "transfrom_velocity/math_tools.h"
 
+using namespace math_tools;
+
 namespace transfrom_velocity {
 
 Eigen::Matrix<double, 6, 1> transformVelocity3D(const Eigen::Matrix4d& Tba, const Eigen::Matrix<double, 6, 1>& va) {

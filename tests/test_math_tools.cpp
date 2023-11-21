@@ -2,7 +2,7 @@
 #include <Eigen/Dense>
 #include "transfrom_velocity/math_tools.h"
 
-using namespace transfrom_velocity;
+using namespace math_tools;
 
 void checkEquality(const Eigen::Matrix3d& a, const Eigen::Matrix3d& b, double tolerance = 1e-5) {
     if ((a - b).norm() < tolerance) {

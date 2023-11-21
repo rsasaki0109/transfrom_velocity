@@ -15,3 +15,9 @@ add_executable(MathToolsTest
     tests/test_math_tools.cpp
     src/math_tools.cpp
 )
+
+add_executable(TransfromIMUTest
+    tests/test_transfrom_IMU.cpp
+    src/transfrom_IMU.cpp
+    src/math_tools.cpp
+)

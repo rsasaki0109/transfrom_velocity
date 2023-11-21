@@ -1,6 +1,6 @@
 #include "transfrom_velocity/math_tools.h"
 
-namespace transfrom_velocity {
+namespace math_tools {
 
 Eigen::Matrix3d v2m(const Eigen::Vector3d& v) {
     Eigen::Matrix3d m;
