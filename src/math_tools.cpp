@@ -48,6 +48,13 @@ Eigen::Matrix2d hat2d(const Eigen::Vector2d& v) {
     return M;
 }
 
+Eigen::Matrix4d makeT(const Eigen::Matrix3d& R, const Eigen::Vector3d& t) {
+    Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
+    T.block<3, 3>(0, 0) = R;
+    T.block<3, 1>(0, 3) = t;
+    return T;
+}
+
 Eigen::Matrix3d expSO3(const Eigen::Vector3d& omega) {
     double theta = omega.norm();
     Eigen::Matrix3d W = skew(omega); // 'skew' 関数は omega を歪対称行列に変換する関数
@@ -98,6 +105,38 @@ Eigen::Vector3d logSO3(const Eigen::Matrix3d& R) {
     return omega;
 }
 
+Eigen::Matrix4d expSE3(const Eigen::VectorXd& x) {
+    Eigen::Vector3d omega = x.segment<3>(3);
+    Eigen::Vector3d v = x.segment<3>(0);
+    Eigen::Matrix3d R = expSO3(omega);
+    double theta2 = omega.dot(omega);
+    if (theta2 > 1e-6) {
+        Eigen::Vector3d t_parallel = omega * omega.dot(v);
+        Eigen::Vector3d omega_cross_v = omega.cross(v);
+        Eigen::Vector3d t = (omega_cross_v - R * omega_cross_v + t_parallel) / theta2;
+        return makeT(R, t);
+    } else {
+        return makeT(R, v);
+    }
+}
+
+Eigen::VectorXd logSE3(const Eigen::Matrix4d& T) {
+    Eigen::Vector3d omega = logSO3(T.block<3, 3>(0, 0));
+    Eigen::Vector3d t = T.block<3, 1>(0, 3);
+    double theta = omega.norm();
+    if (theta < 1e-10) {
+        return Eigen::VectorXd::Zero(6);
+    } else {
+        Eigen::Matrix3d W = skew(omega / theta);
+        double tan = std::tan(0.5 * theta);
+        Eigen::Vector3d WT = W * t;
+        Eigen::Vector3d u = t - 0.5 * theta * WT + (1 - theta / (2.0 * tan)) * (W * WT);
+        Eigen::VectorXd result(6);
+        result << u, omega;
+        return result;
+    }
+}
+
 Eigen::MatrixXd numericalDerivative(
     std::function<Eigen::VectorXd(const std::vector<Eigen::VectorXd>&)> func,
     std::vector<Eigen::VectorXd> params,
@@ -120,6 +159,25 @@ Eigen::MatrixXd numericalDerivative(
     }
 
     return J;
+}
+
+Eigen::Matrix3d HSO3(const Eigen::Vector3d& omega) {
+    double theta2 = omega.dot(omega);
+    double theta = std::sqrt(theta2);
+    bool near_zero = theta2 <= 1e-6;
+    Eigen::Matrix3d W = skew(omega);
+    if (near_zero) {
+        return Eigen::Matrix3d::Identity() - 0.5 * W;
+    } else {
+        Eigen::Matrix3d K = W / theta;
+        Eigen::Matrix3d KK = K * K;
+        double sin_theta = std::sin(theta);
+        double s2 = std::sin(theta / 2.0);
+        double one_minus_cos = 2.0 * s2 * s2;  // [1 - cos(theta)]
+        double a = one_minus_cos / theta;
+        double b = 1.0 - sin_theta / theta;
+        return Eigen::Matrix3d::Identity() - a * K + b * KK;
+    }
 }
 
 } // namespace transfrom_velocity
