@@ -23,9 +23,15 @@ std::pair<Eigen::Matrix2d, Eigen::Vector2d> makeRt(const Eigen::Matrix3d& T);
 
 Eigen::Matrix2d hat2d(const Eigen::Vector2d& v);
 
+Eigen::Matrix4d makeT(const Eigen::Matrix3d& R, const Eigen::Vector3d& t);
+
 Eigen::Matrix3d expSO3(const Eigen::Vector3d& omega);
 
 Eigen::Vector3d logSO3(const Eigen::Matrix3d& R);
+
+Eigen::Matrix4d expSE3(const Eigen::VectorXd& x);
+
+Eigen::VectorXd logSE3(const Eigen::Matrix4d& T);
 
 Eigen::MatrixXd numericalDerivative(
     std::function<Eigen::VectorXd(const std::vector<Eigen::VectorXd>&)> func,
@@ -35,6 +41,8 @@ Eigen::MatrixXd numericalDerivative(
     std::function<Eigen::VectorXd(const Eigen::VectorXd&, const Eigen::VectorXd&)> minus = [](const Eigen::VectorXd& a, const Eigen::VectorXd& b) { return a - b; },
     double delta = 1e-5
 );
+
+Eigen::Matrix3d HSO3(const Eigen::Vector3d& omega);
 
 } // namespace transfrom_velocity
 

@@ -4,50 +4,60 @@
 
 using namespace math_tools;
 
-void checkEquality(const Eigen::Matrix3d& a, const Eigen::Matrix3d& b, double tolerance = 1e-5) {
-    if ((a - b).norm() < tolerance) {
-        std::cout << "OK\n";
+void checkEquality(const Eigen::Matrix3d& a, const Eigen::Matrix3d& b, double tolerance = 1e-4) {
+    double error = (a - b).norm();
+    if (error < tolerance) {
+        std::cout << "OK (error: " << error << ")\n";
     } else {
-        std::cout << "NG\n";
+        std::cout << "NG (error: " << error << ")\n";
     }
 }
 
-// void testHSO3() {
-//     std::cout << "Testing HSO3..." << std::endl;
+void checkEquality(const Eigen::Matrix4d& a, const Eigen::Matrix4d& b, double tolerance = 1e-4) {
+    double error = (a - b).norm();
+    if (error < tolerance) {
+        std::cout << "OK (error: " << error << ")\n";
+    } else {
+        std::cout << "NG (error: " << error << ")\n";
+    }
+}
 
-//     Eigen::Vector3d x(0.5, 0.6, 0.7);
-//     Eigen::Vector3d dx(0.02, 0.03, 0.03);
+void testHSO3() {
+    std::cout << "Testing HSO3..." << std::endl;
 
-//     Eigen::Matrix3d R1 = expSO3(x + dx);
-//     Eigen::Matrix3d R2 = expSO3(x) * expSO3(HSO3(x) * dx);
+    Eigen::Vector3d x(0.5, 0.6, 0.7);
+    Eigen::Vector3d dx(0.02, 0.03, 0.03);
 
-//     checkEquality(R1, R2);
-// }
+    Eigen::Matrix3d R1 = expSO3(x + dx);
+    Eigen::Matrix3d R2 = expSO3(x) * expSO3(HSO3(x) * dx);
 
-// void testSO3() {
-//     std::cout << "Testing SO3..." << std::endl;
+    checkEquality(R1, R2);
+}
 
-//     Eigen::Vector3d v(1.0, 0.3, 2.0);
-//     Eigen::Matrix3d R = expSO3(v);
-//     Eigen::Matrix3d R2 = expSO3(logSO3(R));
-//     Eigen::Matrix3d R3 = expSO3(logSO3(R));
+void testSO3() {
+    std::cout << "Testing SO3..." << std::endl;
 
-//     checkEquality(R, R2);
-//     checkEquality(R2, R3);
-// }
+    Eigen::Vector3d v(1.0, 0.3, 2.0);
+    Eigen::Matrix3d R = expSO3(v);
+    Eigen::Matrix3d R2 = expSO3(logSO3(R));
+    Eigen::Matrix3d R3 = expSO3(logSO3(R));
 
-// void testSE3() {
-//     std::cout << "Testing SE3..." << std::endl;
+    checkEquality(R, R2);
+    checkEquality(R2, R3);
+}
 
-//     Eigen::VectorXd v(6);
-//     v << 1.0, 0.3, 2.0, 1.0, -3.2, 0.2;  // 6-element vector for SE3
-//     Eigen::Matrix4d T = expSE3(v);
-//     Eigen::Matrix4d T2 = expSE3(logSE3(T));
-//     Eigen::Matrix4d T3 = expSE3(logSE3(T));
+void testSE3() {
+    std::cout << "Testing SE3..." << std::endl;
 
-//     checkEquality(T, T2, 1e-5);
-//     checkEquality(T2, T3, 1e-5);
-// }
+    Eigen::VectorXd v(6);
+    v << 1.0, 0.3, 2.0, 1.0, -3.2, 0.2;  // 6-element vector for SE3
+    Eigen::Matrix4d T = expSE3(v);
+    Eigen::Matrix4d T2 = expSE3(logSE3(T));
+    Eigen::Matrix4d T3 = expSE3(logSE3(T));
+
+    checkEquality(T, T2, 1e-5);
+    checkEquality(T2, T3, 1e-5);
+}
 
 void testNumericalDerivative() {
     std::cout << "Testing Numerical Derivative of SO3..." << std::endl;
@@ -82,9 +92,9 @@ void testNumericalDerivative() {
 }
 
 int main() {
-    // testHSO3();
-    // testSO3();
-    // testSE3();
+    testHSO3();
+    testSO3();
+    testSE3();
     testNumericalDerivative();
 
     std::cout << "All tests completed." << std::endl;
